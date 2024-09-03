@@ -1,0 +1,45 @@
+#!meta
+
+{"kernelInfo":{"defaultKernelName":"csharp","items":[{"aliases":[],"name":".NET"},{"aliases":["C#","c#"],"languageName":"C#","name":"csharp"},{"aliases":["F#","f#"],"languageName":"F#","name":"fsharp"},{"aliases":[],"languageName":"HTML","name":"html"},{"aliases":["js"],"languageName":"JavaScript","name":"javascript"},{"aliases":[],"languageName":"KQL","name":"kql"},{"aliases":[],"languageName":"Mermaid","name":"mermaid"},{"aliases":["powershell"],"languageName":"PowerShell","name":"pwsh"},{"aliases":[],"languageName":"SQL","name":"sql"},{"aliases":[],"name":"value"},{"aliases":["frontend"],"name":"vscode"},{"aliases":[],"name":"webview"}]}}
+
+#!csharp
+
+using System.IO;
+
+var w = @"C:\work";
+var f = @"C:\work\juju\1.txt";
+
+Path.GetRelativePath(w, f)
+
+#!csharp
+
+private static string GetRelativePath(string fromPath, string toPath)
+{
+    Uri fromUri = new Uri(AppendDirectorySeparatorChar(fromPath));
+    Uri toUri = new Uri(AppendDirectorySeparatorChar(toPath));
+
+    if (fromUri.Scheme != toUri.Scheme)
+        return toPath;
+
+    Uri relativeUri = fromUri.MakeRelativeUri(toUri);
+    string relativePath = Uri.UnescapeDataString(relativeUri.ToString());
+
+    if (string.Equals(toUri.Scheme, Uri.UriSchemeFile, StringComparison.OrdinalIgnoreCase))
+        relativePath = relativePath.Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
+
+    return relativePath;
+}
+
+private static string AppendDirectorySeparatorChar(string path)
+{
+    // Append a slash only if the path is a directory and does not have a slash.
+    if (!Path.HasExtension(path) &&
+        !path.EndsWith(Path.DirectorySeparatorChar.ToString()))
+        return path + Path.DirectorySeparatorChar;
+
+    return path;
+}
+
+var w = @"C:\work";
+var f = @"C:\work\juju\1.txt";
+GetRelativePath(w, f)
